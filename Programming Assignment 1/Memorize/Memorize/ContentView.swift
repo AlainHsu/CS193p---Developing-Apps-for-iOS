@@ -20,7 +20,7 @@ struct ContentView: View {
             Title()
             Spacer()
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))], content: {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: widthThatBestFits(cardCount: emojiCount)))], content: {
                     ForEach(0 ..< emojiCount, id: \.self) { index in
                         Card(content: emojis[index])
                     }
@@ -28,17 +28,23 @@ struct ContentView: View {
             }
             Spacer()
             HStack {
-                AnimalTheme().onTapGesture {
-                    emojis = animalEmojis.shuffled()
-                }
+                AnimalTheme()
+                    .onTapGesture {
+                        emojis = animalEmojis.shuffled()
+                        randomEmojiCount()
+                    }
                 Spacer()
-                FoodTheme().onTapGesture {
-                    emojis = foodEmojis.shuffled()
-                }
+                FoodTheme()
+                    .onTapGesture {
+                        emojis = foodEmojis.shuffled()
+                        randomEmojiCount()
+                    }
                 Spacer()
-                ActivityTheme().onTapGesture {
-                    emojis = activityEmojis.shuffled()
-                }
+                ActivityTheme()
+                    .onTapGesture {
+                        emojis = activityEmojis.shuffled()
+                        randomEmojiCount()
+                    }
             }.padding(.horizontal, 30)
 //            HStack {
 //                remove().onTapGesture {
@@ -56,6 +62,23 @@ struct ContentView: View {
 
         }.padding()
             .foregroundColor(.blue)
+    }
+
+    func randomEmojiCount() {
+        emojiCount = Int.random(in: 4 ..< emojis.count)
+    }
+
+    func widthThatBestFits(cardCount: Int) -> CGFloat {
+        switch cardCount {
+        case ...4:
+            return 150
+        case 5 ... 9:
+            return 100
+        case 10 ... 16:
+            return 70
+        default:
+            return 60
+        }
     }
 }
 
